@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { 
+  color: #000000; 
+  background: #f8fafc; 
+  font-family: 'Poppins', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI'; 
+  font-weight: 400;
+}
+
+* { 
+  box-sizing: border-box; 
+}
+
+body { 
+  margin: 0; 
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+p, h1, h2, h3, h4, label, span, a {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+small, .light-text {
+  font-weight: 300;
+}
+
+button, input, textarea, select { 
+  font: inherit;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; 
+}
+
+.transparent-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.transparent-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.transparent-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.transparent-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.transparent-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.thinking-dots::after {
+  content: "";
+  animation: thinking-dots 1.2s infinite;
+}
+
+.markdown-body h3 {
+  margin-bottom: 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #333333;
+}
+
+.markdown-body ul {
+  margin-top: 8px;
+  padding-left: 24px;
+  list-style: disc;
+}
+
+.markdown-body li {
+  margin-bottom: 6px;
+}
+
+.markdown-body strong {
+  font-weight: 700;
+}
+
+.markdown-body em {
+  font-style: italic;
+}
+
+@keyframes thinking-dots {
+  0% {
+    content: "";
+  }
+
+  25% {
+    content: ".";
+  }
+
+  50% {
+    content: "..";
+  }
+
+  75%,
+  100% {
+    content: "...";
+  }
+}
