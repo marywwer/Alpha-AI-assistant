@@ -18,11 +18,7 @@ export function AuthProvider() {
   }
 
   if (isError) {
-    const returnUrl = `${window.location.origin}${window.location.pathname}`;
-
-    window.location.href = `https://doggedly-succinct-ridgeback.cloudpub.ru/auth/login?returnUrl=${encodeURIComponent(returnUrl)}`;
-
-    return null;
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;
