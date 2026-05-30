@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Card } from "../components/ui/Card.jsx";
-import { Button } from "../components/ui/Button.jsx";
 import { authApi } from "../features/auth/authApi.js";
 import homeImage from "../../public/img/home.svg";
 import eyeCloseIcon from "../../public/img/eye-close.svg";
@@ -10,10 +9,7 @@ import eyeCloseIcon from "../../public/img/eye-close.svg";
 import eyeOpenIcon from "../../public/img/eye-close.svg";
 
 export function LoginPage() {
-  const navigate = useNavigate();
-  const { setToken, setUser } = useAppStore();
   const [form, setForm] = useState({ login: "", password: "" });
-  const [error, setError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -104,13 +100,6 @@ export function LoginPage() {
               Забыли пароль?
             </a>
           </div>
-
-          {/* Ошибка */}
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
-              {error}
-            </p>
-          )}
 
           {/* Кнопка входа */}
           <button
