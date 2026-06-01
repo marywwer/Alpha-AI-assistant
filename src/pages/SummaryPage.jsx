@@ -60,6 +60,10 @@ const allTeamsMetricGroups = [
   },
 ];
 
+const STATUS_COLORS = ["#A5C4FD", "#E3B0FF", "#FF7676"];
+
+const TASK_TYPE_COLORS = ["#FFA8A8", "#5DBC4E", "#F4BE5E"];
+
 export function SummaryPage() {
   const { selectedTeamId } = useAppStore();
 
@@ -101,12 +105,21 @@ export function SummaryPage() {
             group.ids.includes(metric.id),
           );
 
+          const isCommitsGroup = group.title === "Коммиты и страницы";
+
           return (
-            <KpiGroup key={group.title} title={group.title}>
-              {groupMetrics.map((metric) => (
-                <KpiCard key={metric.id} metric={metric} />
-              ))}
-            </KpiGroup>
+            <div
+              key={group.title}
+              className={
+                !isAllTeams && isCommitsGroup ? "justify-self-end" : ""
+              }
+            >
+              <KpiGroup title={group.title}>
+                {groupMetrics.map((metric) => (
+                  <KpiCard key={metric.id} metric={metric} />
+                ))}
+              </KpiGroup>
+            </div>
           );
         })}
       </section>
@@ -117,36 +130,41 @@ export function SummaryPage() {
               title="Количество просроченных задач"
               subtitle="Количество просроченных задач каждой команды"
               data={overdue}
+              fillColor="#B7E0FF"
+              activeColor="#5BB2F2"
             />
-
             <VerticalBarChart
               title="Количество задач, выполненных после срока"
               subtitle="Количество задач выполненных после срока каждой команды"
               data={lateDoneByTeam}
+              fillColor="#FFD4ED"
+              activeColor="#F57BC3"
             />
-
             <VerticalBarChart
               title="Эффективность каждой команды"
               data={efficiency}
+              fillColor="#F0E5FC"
+              activeColor="#962DFF"
+              isPercent={true}
             />
-
-            <StatusPieChart data={statuses?.chartData} />
+            <StatusPieChart data={statuses?.chartData} colors={STATUS_COLORS} />
           </>
         ) : (
           <>
-            <StatusPieChart data={statuses?.chartData} />
-
+            <StatusPieChart data={statuses?.chartData} colors={STATUS_COLORS} />
             <VerticalBarChart
               title="Распределение по приоритетам"
               subtitle="Количество выполненных задач в каждом приоритете"
               data={priorityDoneTasks}
+              fillColor="#F0E5FC"
+              activeColor="#962DFF"
             />
-
             <StatusPieChart
-              title="Распределение закрытых задач по типам"
+              title="Закрытые задачи"
+              subtitle="Количество закрытых задач по каждому типу"
               data={closedTasksByType?.chartData}
+              colors={TASK_TYPE_COLORS}
             />
-
             <HorizontalBarChart
               title="Загруженность участников команды"
               subtitle="% закрепленных задач за участником от общего числа задач на команду"

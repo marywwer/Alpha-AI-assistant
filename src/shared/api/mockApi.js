@@ -2,7 +2,7 @@ import {
   chats,
   currentUser,
   efficiencyByTeam,
-  kpi,
+  mockKpi,
   meetings,
   memberLoad,
   mockClosedTasksByType,
@@ -27,12 +27,20 @@ export const api = {
   getCurrentUser: () => delay(currentUser),
   getChats: () => delay(chats),
   getMeetings: () => delay(meetings),
-  getKpi: (teamId) => delay({ teamId, metrics: kpi }),
+  getKpi: (teamId) => {
+    const currentKpi = mockKpi[teamId] || mockKpi.romashki;
+
+    return delay({
+      teamId,
+      metrics: currentKpi.metrics,
+    });
+  },
   getStatusDistribution: () =>
     delay({ chartData: statusDistribution, total: 150 }),
   getOverdueByTeam: () => delay(overdueByTeam),
   getEfficiencyByTeam: () => delay(efficiencyByTeam),
-  getMemberLoad: (teamId) => delay(mockMemberLoad[teamId] || memberLoad),
+  getMemberLoad: (teamId) =>
+    delay(mockMemberLoad[teamId] || mockMemberLoad.romashki),
 
   getRoadmap: () => delay(roadmap),
 

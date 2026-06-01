@@ -17,21 +17,87 @@ export const meetings = [
   { id: 'meet-2', title: 'Daily команды', date: '2026-05-06' }
 ];
 
-export const kpi = [
-  ['tasks_in_progress', 'Задачи в работе', 12, 3.5, 'up'],
-  ['created_pages', 'Созданные страницы', 8, -1, 'down',],
-  ['team_efficiency', 'Эффективность команды', 74.7, 2.1, 'up'],
-  ['commit_count', 'Количество коммитов', 47, 5, 'up'],
-  ['reopened_tasks', 'Переоткрытые задачи', 4, -2, 'down'],
-  ['created_tasks', 'Созданные задачи', 31, 7, 'up'],
-  ['done_tasks', 'Выполненные задачи', 28, 4, 'up'],
-  ['overdue_tasks', 'Просроченные задачи', 5, -1.5, 'down'],
-  ['avg_commit_size', 'Средний размер коммитов', 240, 8, 'up'],
-  ['unassigned_tasks', 'Неназначенные задачи', 3, -3, 'down'],
-  ['late_done_percent', '% задач, выполненных после срока', 11, -2, 'down'],
-  ['team_interaction_quality', 'Качество взаимодействия команды', 86, 4, 'up'],
-  ['reopened_bug_tasks', 'Переоткрытые задачи с типом “Баг”', 2, -1, 'down']
-].map(([id, title, value, delta, trend]) => ({ id, title, value, delta, trend, lastUpdated: '2026-05-07T10:00:00Z' }));
+const createKpi = (items) =>
+  items.map(([id, title, value, delta, trend]) => ({
+    id,
+    title,
+    value,
+    delta,
+    trend,
+    lastUpdated: "2026-05-07T10:00:00Z",
+  }));
+
+export const mockKpi = {
+  all: {
+    metrics: createKpi([
+      ["tasks_in_progress", "Задачи в работе", 42, 3.5, "up"],
+      ["created_pages", "Созданные страницы", 26, -1, "down"],
+      ["commit_count", "Количество коммитов", 147, 5, "up"],
+      ["reopened_tasks", "Переоткрытые задачи", 14, -2, "down"],
+      ["created_tasks", "Созданные задачи", 131, 7, "up"],
+      ["done_tasks", "Выполненные задачи", 108, 4, "up"],
+      ["overdue_tasks", "Просроченные задачи", 23, -1.5, "down"],
+      ["avg_commit_size", "Средний размер коммитов", 240, 8, "up"],
+      ["unassigned_tasks", "Неназначенные задачи", 8, -3, "down"],
+      ["late_done_percent", "% задач, выполненных после срока", 11, -2, "down"],
+      ["reopened_bug_tasks", "Переоткрытые задачи с типом “Баг”", 6, -1, "down"],
+    ]),
+  },
+
+  romashki: {
+    metrics: createKpi([
+      ["tasks_in_progress", "Задачи в работе", 12, 3.5, "up"],
+      ["created_pages", "Созданные страницы", 8, -1, "down"],
+      ["team_efficiency", "Эффективность команды", 74.7, 2.1, "up"],
+      ["commit_count", "Количество коммитов", 47, 5, "up"],
+      ["reopened_tasks", "Переоткрытые задачи", 4, -2, "down"],
+      ["created_tasks", "Созданные задачи", 31, 7, "up"],
+      ["done_tasks", "Выполненные задачи", 28, 4, "up"],
+      ["overdue_tasks", "Просроченные задачи", 5, -1.5, "down"],
+      ["avg_commit_size", "Средний размер коммитов", 240, 8, "up"],
+      ["unassigned_tasks", "Неназначенные задачи", 3, -3, "down"],
+      ["late_done_percent", "% задач, выполненных после срока", 11, -2, "down"],
+      ["team_interaction_quality", "Качество взаимодействия команды", 86, 4, "up"],
+      ["reopened_bug_tasks", "Переоткрытые задачи с типом “Баг”", 2, -1, "down"],
+    ]),
+  },
+
+  alpha: {
+    metrics: createKpi([
+      ["tasks_in_progress", "Задачи в работе", 18, 4, "up"],
+      ["created_pages", "Созданные страницы", 11, 2, "up"],
+      ["team_efficiency", "Эффективность команды", 68.4, -1.8, "down"],
+      ["commit_count", "Количество коммитов", 53, 6, "up"],
+      ["reopened_tasks", "Переоткрытые задачи", 6, 1, "up"],
+      ["created_tasks", "Созданные задачи", 44, 5, "up"],
+      ["done_tasks", "Выполненные задачи", 36, 3, "up"],
+      ["overdue_tasks", "Просроченные задачи", 8, 2, "up"],
+      ["avg_commit_size", "Средний размер коммитов", 215, -6, "down"],
+      ["unassigned_tasks", "Неназначенные задачи", 2, -1, "down"],
+      ["late_done_percent", "% задач, выполненных после срока", 9, -3, "down"],
+      ["team_interaction_quality", "Качество взаимодействия команды", 79, -2, "down"],
+      ["reopened_bug_tasks", "Переоткрытые задачи с типом “Баг”", 3, 1, "up"],
+    ]),
+  },
+
+  "team-1": {
+    metrics: createKpi([
+      ["tasks_in_progress", "Задачи в работе", 15, -2, "down"],
+      ["created_pages", "Созданные страницы", 7, 1, "up"],
+      ["team_efficiency", "Эффективность команды", 81.2, 3.4, "up"],
+      ["commit_count", "Количество коммитов", 49, -4, "down"],
+      ["reopened_tasks", "Переоткрытые задачи", 5, -1, "down"],
+      ["created_tasks", "Созданные задачи", 56, 8, "up"],
+      ["done_tasks", "Выполненные задачи", 44, 6, "up"],
+      ["overdue_tasks", "Просроченные задачи", 10, -2, "down"],
+      ["avg_commit_size", "Средний размер коммитов", 260, 12, "up"],
+      ["unassigned_tasks", "Неназначенные задачи", 3, 0, "down"],
+      ["late_done_percent", "% задач, выполненных после срока", 14, 1, "up"],
+      ["team_interaction_quality", "Качество взаимодействия команды", 88, 5, "up"],
+      ["reopened_bug_tasks", "Переоткрытые задачи с типом “Баг”", 1, -2, "down"],
+    ]),
+  },
+};
 
 export const mockPriorityDoneTasks = {
   all: [
@@ -42,11 +108,11 @@ export const mockPriorityDoneTasks = {
     { name: "Lowest", value: 7 },
   ],
   romashki: [
-    { name: "Highest", value: 10 },
-    { name: "High", value: 24 },
-    { name: "Medium", value: 38 },
-    { name: "Low", value: 20 },
-    { name: "Lowest", value: 8 },
+    { name: "Highest", value: 50 },
+    { name: "High", value: 25 },
+    { name: "Medium", value: 79 },
+    { name: "Low", value: 34 },
+    { name: "Lowest", value: 15 },
   ],
   alpha: [
     { name: "Highest", value: 8 },
@@ -104,9 +170,9 @@ export const statusDistribution = [
 ];
 
 export const overdueByTeam = [
-  { name: "Ромашки", value: 5 },
-  { name: "Паргелий", value: 8 },
-  { name: "Команда 1", value: 3 },
+  { name: "Ромашки", value: 54 },
+  { name: "Паргелий", value: 37 },
+  { name: "Команда 1", value: 110 },
 ];
 
 export const efficiencyByTeam = [
@@ -124,22 +190,22 @@ export const memberLoad = [
 
 export const mockMemberLoad = {
   romashki: [
-    { name: "Анна", value: 32, tasks: 16 },
-    { name: "Иван", value: 24, tasks: 12 },
-    { name: "Мария", value: 18, tasks: 9 },
-    { name: "Олег", value: 26, tasks: 13 },
+    { name: "Анна И.И.", value: 32, tasks: 1 },
+    { name: "Иван И.И.", value: 24, tasks: 2 },
+    { name: "Мария И.И.", value: 18, tasks: 9 },
+    { name: "Олег И.И.", value: 26, tasks: 35 },
   ],
   alpha: [
-    { name: "Дмитрий", value: 28, tasks: 14 },
-    { name: "Екатерина", value: 22, tasks: 11 },
-    { name: "Сергей", value: 34, tasks: 17 },
-    { name: "Полина", value: 16, tasks: 8 },
+    { name: "Дмитрий И.И.", value: 28, tasks: 14 },
+    { name: "Екатерина И.И.", value: 22, tasks: 11 },
+    { name: "Сергей И.И.", value: 34, tasks: 17 },
+    { name: "Полина И.И.", value: 16, tasks: 8 },
   ],
   "team-1": [
-    { name: "Алексей", value: 30, tasks: 15 },
-    { name: "Мария", value: 26, tasks: 13 },
-    { name: "Илья", value: 24, tasks: 12 },
-    { name: "Ольга", value: 20, tasks: 10 },
+    { name: "Алексей И.И.", value: 30, tasks: 15 },
+    { name: "Мария И.И.", value: 26, tasks: 13 },
+    { name: "Илья И.И.", value: 24, tasks: 12 },
+    { name: "Ольга И.И.", value: 20, tasks: 10 },
   ],
 };
 
