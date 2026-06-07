@@ -13,12 +13,7 @@ import { ProtocolEditorPage } from '../pages/ProtocolEditorPage.jsx';
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/login" replace />,
-  },
-
-  {
-    path: "/login",
-    element: <LoginPage />,
+    element: <Navigate to="/chat" replace />,
   },
 
   {

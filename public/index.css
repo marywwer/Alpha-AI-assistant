@@ -61,6 +61,15 @@ button, input, textarea, select {
   background: rgba(0, 0, 0, 0.15);
 }
 
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .thinking-dots::after {
   content: "";
   animation: thinking-dots 1.2s infinite;

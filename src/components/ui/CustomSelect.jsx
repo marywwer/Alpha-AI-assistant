@@ -41,7 +41,7 @@ export function CustomSelect({
   }, []);
 
   return (
-    <div className="relative" ref={selectRef}>
+    <div className={cn("relative", isOpen && "z-[100]")} ref={selectRef}>
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -71,7 +71,7 @@ export function CustomSelect({
       {isOpen && (
         <div
           className={cn(
-            'absolute top-full z-50 mt-2 min-w-full rounded-2xl border bg-white shadow-lg',
+            "absolute top-full z-[100] mt-2 min-w-full rounded-2xl border bg-white shadow-lg",
             dropdownAlign === 'right' ? 'right-0' : 'left-0',
             dropdownClassName
           )}

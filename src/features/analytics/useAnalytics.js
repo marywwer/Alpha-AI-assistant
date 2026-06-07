@@ -33,7 +33,10 @@ export const useMemberLoad = (teamId) =>
   });
 
 export const useRoadmap = (teamId) =>
-  useQuery({ queryKey: ["roadmap", teamId], queryFn: api.getRoadmap });
+  useQuery({
+    queryKey: ["roadmap", teamId],
+    queryFn: () => api.getRoadmap(teamId),
+  });
 
 export function usePriorityDoneTasks(teamId) {
   return useQuery({

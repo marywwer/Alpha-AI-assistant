@@ -3,7 +3,7 @@ import { API_BASE_URL } from "../../shared/config/api.js";
 export const authApi = {
   login() {
     const returnUrl = `${window.location.origin}/chat`;
-
+    
     window.location.href = `${API_BASE_URL}/auth/login?returnUrl=${encodeURIComponent(returnUrl)}`;
   },
 

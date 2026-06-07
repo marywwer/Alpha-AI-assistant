@@ -10,10 +10,10 @@ import {
   mockMemberLoad,
   mockPriorityDoneTasks,
   overdueByTeam,
-  roadmap,
   statusDistribution,
   teams,
 } from "../../data/mockData.js";
+import { roadmapMockByTeam, TeamId } from "../../data/mockRoadmap.js";
 
 const delay = (data, ms = 250) =>
   new Promise((resolve) => setTimeout(() => resolve(data), ms));
@@ -42,7 +42,13 @@ export const api = {
   getMemberLoad: (teamId) =>
     delay(mockMemberLoad[teamId] || mockMemberLoad.romashki),
 
-  getRoadmap: () => delay(roadmap),
+  getRoadmap: (teamId) => {
+    if (!teamId || teamId === TeamId.ALL) {
+      return delay(roadmapMockByTeam[TeamId.ALL]);
+    }
+
+    return delay(roadmapMockByTeam[teamId] || roadmapMockByTeam[TeamId.ROMASHKI]);
+  },
 
   getPriorityDoneTasks: (teamId) =>
     delay(mockPriorityDoneTasks[teamId] || mockPriorityDoneTasks.romashki),

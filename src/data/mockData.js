@@ -209,19 +209,3 @@ export const mockMemberLoad = {
   ],
 };
 
-export const roadmap = {
-  month: 'Март',
-  weeks: [
-    { id: 'w1', title: 'Неделя 1', dates: '02.03–06.03' },
-    { id: 'w2', title: 'Неделя 2', dates: '09.03–13.03' },
-    { id: 'w3', title: 'Неделя 3', dates: '16.03–20.03' },
-    { id: 'w4', title: 'Неделя 4', dates: '23.03–27.03' }
-  ],
-  members: ['Алексей', 'Мария', 'Илья', 'Ольга'],
-  tasks: [
-    { id: 'r1', assignee: 'Алексей', weekId: 'w1', title: 'Аналитика Jira', status: 'В работе' },
-    { id: 'r2', assignee: 'Мария', weekId: 'w2', title: 'Протоколы встреч', status: 'К выполнению' },
-    { id: 'r3', assignee: 'Илья', weekId: 'w3', title: 'GitHub metrics API', status: 'В работе' },
-    { id: 'r4', assignee: 'Ольга', weekId: 'w4', title: 'QA digest', status: 'Готово' }
-  ]
-};
