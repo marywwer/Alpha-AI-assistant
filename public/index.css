@@ -70,6 +70,25 @@ button, input, textarea, select {
   scrollbar-width: none;
 }
 
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--selected,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__year-text--selected {
+  background-color: #ff1616 !important;
+  color: white !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: #ffd6d6 !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  font-weight: 600;
+}
+
 .thinking-dots::after {
   content: "";
   animation: thinking-dots 1.2s infinite;
@@ -117,4 +136,109 @@ button, input, textarea, select {
   100% {
     content: "...";
   }
+}
+
+.custom-calendar {
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
+  font-family: inherit;
+}
+
+.custom-calendar-popper {
+  z-index: 50;
+}
+
+.custom-calendar-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding: 14px 12px 10px;
+  background: #fff;
+}
+
+.calendar-header-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.arrow {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid #ff0404;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+.calendar-dropdown {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  z-index: 100;
+  width: 108px;
+  max-height: 250px;
+  overflow-y: auto;
+  background: #f1f1f1;
+  border-radius: 3px;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 18%);
+  padding: 6px 0;
+}
+
+.year-dropdown {
+  width: 106px;
+}
+
+.calendar-dropdown button {
+  width: 100%;
+  padding: 4px 12px;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  background: transparent;
+  border: none;
+}
+
+.calendar-dropdown button:hover,
+.calendar-dropdown button.active {
+  background: #ff0404;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.react-datepicker__header {
+  background: #fff;
+  border-bottom: none;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day {
+  width: 32px;
+  line-height: 32px;
+  margin: 2px;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background: #ff0404 !important;
+  color: #fff !important;
+  border-radius: 4px;
+}
+
+.react-datepicker__day:hover {
+  border-radius: 4px;
+}
+
+.react-datepicker__current-month {
+  display: none;
 }

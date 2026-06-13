@@ -1,5 +1,5 @@
-import { CustomSelect } from "../ui/CustomSelect.jsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { CustomSelect } from "../ui/CustomSelect.jsx";
 import { useTeams } from "../../features/teams/useTeams.js";
 import { useAppStore } from "../../store/appStore.js";
 
@@ -8,7 +8,9 @@ import analyticsButton from "../../../public/img/trending-up.svg";
 import meetingsButton from "../../../public/img/phone.svg";
 
 export function TopBar() {
-  const { data: teams = [] } = useTeams();
+  const { data } = useTeams();
+
+  const teams = Array.isArray(data) ? data : data ? [data] : [];
 
   const { selectedTeamId, setSelectedTeamId } = useAppStore();
 
@@ -18,6 +20,8 @@ export function TopBar() {
   const currentNavValue = location.pathname.startsWith("/analytics")
     ? "/analytics/summary"
     : location.pathname;
+
+  const isMeetingsPage = location.pathname.startsWith("/meetings");
 
   const navOptions = [
     {
@@ -66,18 +70,20 @@ export function TopBar() {
       />
 
       {/* Селект команд */}
-      <div className="ml-auto">
-        <CustomSelect
-          value={selectedTeamId}
-          onChange={setSelectedTeamId}
-          placeholder="Выбор команды"
-          options={teamOptions}
-          dropdownAlign="right"
-          className="min-w-[130px] border border-[#C3C0C0] justify-center px-4 py-1 text-base"
-          dropdownClassName="min-w-[180px] px-[5px] py-[8px]"
-          optionClassName="text-base"
-        />
-      </div>
+      {!isMeetingsPage && (
+        <div className="ml-auto">
+          <CustomSelect
+            value={selectedTeamId}
+            onChange={setSelectedTeamId}
+            placeholder="Выбор команды"
+            options={teamOptions}
+            dropdownAlign="right"
+            className="min-w-[130px] border border-[#C3C0C0] justify-center px-4 py-1 text-base"
+            dropdownClassName="min-w-[180px] px-[5px] py-[8px]"
+            optionClassName="text-base"
+          />
+        </div>
+      )}
 
       {/* <Link
         className="text-sm text-muted hover:text-slate-900"

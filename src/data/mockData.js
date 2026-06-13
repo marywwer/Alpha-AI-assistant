@@ -1,20 +1,19 @@
 export const teams = [
-  { id: 'romashki', name: 'Ромашки' },
-  { id: 'alpha', name: 'Паргелий' },
-  { id: 'team-1', name: 'Команда 1' }
+  { id: "romashki", name: "Ромашки" },
+  { id: "alpha", name: "Паргелий" },
+  { id: "team-1", name: "Команда 1" },
 ];
 
-export const currentUser = { firstName: 'Анна', lastName: 'Иванова', role: 'Тимлид' };
+export const currentUser = {
+  firstName: "Анна",
+  lastName: "Иванова",
+  role: "Тимлид",
+};
 
 export const chats = [
-  { id: 'chat-1', title: 'Дайджест аналитика' },
-  { id: 'chat-2', title: 'Проверка задач QA' },
-  { id: 'chat-3', title: 'Итоги разработки' }
-];
-
-export const meetings = [
-  { id: 'meet-1', title: 'Планирование спринта', date: '2026-05-07' },
-  { id: 'meet-2', title: 'Daily команды', date: '2026-05-06' }
+  { id: "chat-1", title: "Дайджест аналитика" },
+  { id: "chat-2", title: "Проверка задач QA" },
+  { id: "chat-3", title: "Итоги разработки" },
 ];
 
 const createKpi = (items) =>
@@ -40,7 +39,13 @@ export const mockKpi = {
       ["avg_commit_size", "Средний размер коммитов", 240, 8, "up"],
       ["unassigned_tasks", "Неназначенные задачи", 8, -3, "down"],
       ["late_done_percent", "% задач, выполненных после срока", 11, -2, "down"],
-      ["reopened_bug_tasks", "Переоткрытые задачи с типом “Баг”", 6, -1, "down"],
+      [
+        "reopened_bug_tasks",
+        "Переоткрытые задачи с типом “Баг”",
+        6,
+        -1,
+        "down",
+      ],
     ]),
   },
 
@@ -57,8 +62,20 @@ export const mockKpi = {
       ["avg_commit_size", "Средний размер коммитов", 240, 8, "up"],
       ["unassigned_tasks", "Неназначенные задачи", 3, -3, "down"],
       ["late_done_percent", "% задач, выполненных после срока", 11, -2, "down"],
-      ["team_interaction_quality", "Качество взаимодействия команды", 86, 4, "up"],
-      ["reopened_bug_tasks", "Переоткрытые задачи с типом “Баг”", 2, -1, "down"],
+      [
+        "team_interaction_quality",
+        "Качество взаимодействия команды",
+        86,
+        4,
+        "up",
+      ],
+      [
+        "reopened_bug_tasks",
+        "Переоткрытые задачи с типом “Баг”",
+        2,
+        -1,
+        "down",
+      ],
     ]),
   },
 
@@ -75,7 +92,13 @@ export const mockKpi = {
       ["avg_commit_size", "Средний размер коммитов", 215, -6, "down"],
       ["unassigned_tasks", "Неназначенные задачи", 2, -1, "down"],
       ["late_done_percent", "% задач, выполненных после срока", 9, -3, "down"],
-      ["team_interaction_quality", "Качество взаимодействия команды", 79, -2, "down"],
+      [
+        "team_interaction_quality",
+        "Качество взаимодействия команды",
+        79,
+        -2,
+        "down",
+      ],
       ["reopened_bug_tasks", "Переоткрытые задачи с типом “Баг”", 3, 1, "up"],
     ]),
   },
@@ -93,8 +116,20 @@ export const mockKpi = {
       ["avg_commit_size", "Средний размер коммитов", 260, 12, "up"],
       ["unassigned_tasks", "Неназначенные задачи", 3, 0, "down"],
       ["late_done_percent", "% задач, выполненных после срока", 14, 1, "up"],
-      ["team_interaction_quality", "Качество взаимодействия команды", 88, 5, "up"],
-      ["reopened_bug_tasks", "Переоткрытые задачи с типом “Баг”", 1, -2, "down"],
+      [
+        "team_interaction_quality",
+        "Качество взаимодействия команды",
+        88,
+        5,
+        "up",
+      ],
+      [
+        "reopened_bug_tasks",
+        "Переоткрытые задачи с типом “Баг”",
+        1,
+        -2,
+        "down",
+      ],
     ]),
   },
 };
@@ -164,9 +199,9 @@ export const mockLateDoneByTeam = [
 ];
 
 export const statusDistribution = [
-  { name: 'В работе', value: 15, percentage: 10 },
-  { name: 'К выполнению', value: 15, percentage: 10 },
-  { name: 'Выполнено', value: 120, percentage: 80 }
+  { name: "В работе", value: 15, percentage: 10 },
+  { name: "К выполнению", value: 15, percentage: 10 },
+  { name: "Выполнено", value: 120, percentage: 80 },
 ];
 
 export const overdueByTeam = [
@@ -182,10 +217,10 @@ export const efficiencyByTeam = [
 ];
 
 export const memberLoad = [
-  { name: 'Алексей', tasks: 9 },
-  { name: 'Мария', tasks: 7 },
-  { name: 'Илья', tasks: 11 },
-  { name: 'Ольга', tasks: 5 }
+  { name: "Алексей", tasks: 9 },
+  { name: "Мария", tasks: 7 },
+  { name: "Илья", tasks: 11 },
+  { name: "Ольга", tasks: 5 },
 ];
 
 export const mockMemberLoad = {
@@ -208,4 +243,3 @@ export const mockMemberLoad = {
     { name: "Ольга И.И.", value: 20, tasks: 10 },
   ],
 };
-

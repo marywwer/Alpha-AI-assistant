@@ -445,7 +445,9 @@ function RoadmapItem({ item, calendar, color, isExpanded, onToggle }) {
       {isExpanded ? (
         <div className="grid grid-cols-[1fr_240px] gap-8">
           <div>
-            <div className="line-clamp-1 text-[16px] font-medium">{item.title}</div>
+            <div className="line-clamp-1 text-[16px] font-medium">
+              {item.title}
+            </div>
 
             <div className="mt-1 text-[16px]">
               Статус: {statusLabel[item.status] ?? "Не указан"}
@@ -496,7 +498,9 @@ function RoadmapItem({ item, calendar, color, isExpanded, onToggle }) {
         </div>
       ) : (
         <div className="relative pr-10">
-          <div className="line-clamp-1 text-[16px] font-medium">{item.title}</div>
+          <div className="line-clamp-1 text-[16px] font-medium">
+            {item.title}
+          </div>
 
           <div className="mt-1 text-[16px]">
             Статус: {statusLabel[item.status] ?? "Не указан"}
@@ -519,7 +523,15 @@ export function RoadmapBoard({ data }) {
   const scrollRef = useRef(null);
   const [expandedItemId, setExpandedItemId] = useState(null);
 
-  const calendar = useMemo(() => getYearCalendar(2026), []);
+  const roadmapStartDate = data?.startDate;
+
+  const calendar = useMemo(() => {
+    const year = roadmapStartDate
+      ? new Date(`${roadmapStartDate}T00:00:00`).getFullYear()
+      : new Date().getFullYear();
+
+    return getYearCalendar(year);
+  }, [roadmapStartDate]);
 
   useEffect(() => {
     if (!scrollRef.current) return;

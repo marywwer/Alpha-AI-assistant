@@ -1,6 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { api } from '../../shared/api/mockApi.js';
+import { useQuery } from "@tanstack/react-query";
+import { teamApi } from "../../shared/api/teamApi.js";
 
 export function useTeams() {
-  return useQuery({ queryKey: ['teams'], queryFn: api.getTeams });
+  return useQuery({
+    queryKey: ["teams"],
+    queryFn: teamApi.getTeams,
+  });
 }

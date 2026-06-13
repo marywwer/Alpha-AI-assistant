@@ -4,7 +4,16 @@ import { useAppStore } from "../store/appStore.js";
 
 export function RoadmapPage() {
   const { selectedTeamId } = useAppStore();
-  const { data } = useRoadmap(selectedTeamId);
+  const { data, isLoading, isError } = useRoadmap(selectedTeamId);
+
+  if (isLoading) {
+    return <div>Загружаем roadmap...</div>;
+  }
+
+  if (isError) {
+    return <div>Не удалось загрузить roadmap</div>;
+  }
+
   return (
     <div>
       <RoadmapBoard data={data} />

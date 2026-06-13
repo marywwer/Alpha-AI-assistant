@@ -7,7 +7,9 @@ export function AuthProvider() {
   {
     /* Временный пропуск авторизации для удобства разработки */
   }
-  const DEV_AUTH_BYPASS = import.meta.env.VITE_DEV_AUTH_BYPASS === "true";
+  {
+    /*const DEV_AUTH_BYPASS = import.meta.env.VITE_DEV_AUTH_BYPASS === "true";*/
+  }
 
   const { data: user, isLoading, isError } = useCurrentUser();
   const { setUser } = useAppStore();
@@ -15,8 +17,10 @@ export function AuthProvider() {
   {
     /* Временный пропуск авторизации для удобства разработки */
   }
-  if (DEV_AUTH_BYPASS) {
+  {
+    /*if (DEV_AUTH_BYPASS) {
     return <Outlet />;
+  }*/
   }
 
   useEffect(() => {
@@ -26,15 +30,38 @@ export function AuthProvider() {
   }, [user, setUser]);
 
   if (isLoading) {
-    return <div className="flex min-h-[60vh] w-full items-center justify-center">Загрузка...</div>;
+    return (
+      <div className="flex min-h-[60vh] w-full items-center justify-center">
+        Загрузка...
+      </div>
+    );
   }
 
   if (isError) {
-    const returnUrl = `${window.location.origin}${window.location.pathname}`;
+    return (
+      <div className="flex min-h-[60vh] w-full items-center justify-center">
+        <div className="rounded-lg border border-[#D9D9D9] bg-white p-6 text-center shadow-md">
+          <p className="text-[18px] font-semibold">
+            Не удалось получить пользователя
+          </p>
+          <p className="mt-2 text-[#666]">
+            Сервер авторизации сейчас недоступен.
+          </p>
 
-    window.location.href = `https://doggedly-succinct-ridgeback.cloudpub.ru/auth/login?returnUrl=${encodeURIComponent(returnUrl)}`;
+          <button
+            type="button"
+            onClick={() => {
+              const returnUrl = `${window.location.origin}${window.location.pathname}`;
 
-    return null;
+              window.location.href = `https://doggedly-succinct-ridgeback.cloudpub.ru/auth/login?returnUrl=${encodeURIComponent(returnUrl)}`;
+            }}
+            className="mt-4 rounded-lg bg-[#FF0404] hover:bg-[#CA0808] active:bg-[#A50505] px-4 py-1 text-white"
+          >
+            Войти заново
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return <Outlet />;

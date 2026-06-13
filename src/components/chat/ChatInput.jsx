@@ -6,6 +6,7 @@ const roles = [
   { id: "analyst", title: "Аналитик" },
   { id: "developer", title: "Разработчик" },
   { id: "tester", title: "Тестировщик" },
+  { id: "business-analyst", title: "Бизнес-аналитик" },
 ];
 
 export function ChatInput({

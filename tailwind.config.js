@@ -9,6 +9,9 @@ export default {
         soft: '#f8fafc',
         brand: '#2563eb'
       },
+      boxShadow: {
+        'custom': '0px 2.44px 9.75px 0px #00000014',
+      }
     }
   },
   plugins: [require("@tailwindcss/typography")],

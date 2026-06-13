@@ -77,7 +77,9 @@ export function SummaryPage() {
     ? allTeamsMetricGroups
     : teamMetricGroups;
 
-  const { data: kpiData } = useKpi(selectedTeamId);
+  const metricKeys = currentMetricGroups.flatMap((group) => group.ids);
+
+  const { data: kpiData } = useKpi(selectedTeamId, metricKeys);
   const { data: statuses } = useStatusDistribution(selectedTeamId);
   const { data: overdue } = useOverdueByTeam(selectedTeamId);
   const { data: efficiency } = useEfficiencyByTeam(selectedTeamId);

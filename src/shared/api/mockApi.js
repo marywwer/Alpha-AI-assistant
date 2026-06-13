@@ -3,7 +3,6 @@ import {
   currentUser,
   efficiencyByTeam,
   mockKpi,
-  meetings,
   memberLoad,
   mockClosedTasksByType,
   mockLateDoneByTeam,
@@ -47,7 +46,9 @@ export const api = {
       return delay(roadmapMockByTeam[TeamId.ALL]);
     }
 
-    return delay(roadmapMockByTeam[teamId] || roadmapMockByTeam[TeamId.ROMASHKI]);
+    return delay(
+      roadmapMockByTeam[teamId] || roadmapMockByTeam[TeamId.ROMASHKI],
+    );
   },
 
   getPriorityDoneTasks: (teamId) =>

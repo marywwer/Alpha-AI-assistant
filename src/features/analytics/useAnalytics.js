@@ -1,10 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../shared/api/mockApi.js";
+import { metricsApi } from "../../shared/api/metricsApi.js";
+import { digestApi } from "../../shared/api/digestApi.js";
 
-export const useKpi = (teamId) =>
+export const useKpi = (teamId, metricsKeys = []) =>
   useQuery({
-    queryKey: ["kpi", teamId],
-    queryFn: () => api.getKpi(teamId),
+    queryKey: ["kpi", teamId, metricsKeys],
+    queryFn: async () => {
+      const data = await metricsApi.getMetrics({
+        teamId,
+        metricsKeys,
+      });
+
+      return {
+        teamId,
+        metrics:
+          data.metricResponses?.map((metric) => ({
+            id: metric.key,
+            title: metric.name,
+            value: metric.value,
+            delta: metric.changeInProcentage,
+            trend: metric.isUp ? "up" : "down",
+          })) || [],
+      };
+    },
+    enabled: metricsKeys.length > 0,
     refetchInterval: 60_000,
   });
 
@@ -35,7 +55,8 @@ export const useMemberLoad = (teamId) =>
 export const useRoadmap = (teamId) =>
   useQuery({
     queryKey: ["roadmap", teamId],
-    queryFn: () => api.getRoadmap(teamId),
+    queryFn: () => digestApi.getDigestData(teamId),
+    refetchInterval: 60_000,
   });
 
 export function usePriorityDoneTasks(teamId) {

@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { useSendMessage } from "../../features/chat/useChat.js";
+import {
+  useSendMessage,
+  useMessageResult,
+} from "../../features/chat/useChat.js";
+import { useAppStore } from "../../store/appStore.js";
 import { useChatStore } from "../../store/chatStore.js";
 import { ChatInput } from "./ChatInput.jsx";
 
@@ -13,6 +17,8 @@ export function ChatWindow() {
 
   const bottomRef = useRef(null);
   const sendMessage = useSendMessage();
+  const getMessageResult = useMessageResult();
+  const { selectedTeamId } = useAppStore();
 
   const { chats, activeChatId, initChats, addMessage, updateMessage } =
     useChatStore();
@@ -50,6 +56,18 @@ export function ChatWindow() {
     }
   };
 
+  const waitForAiAnswer = async (sessionId) => {
+    while (true) {
+      const result = await getMessageResult.mutateAsync(sessionId);
+
+      if (result?.answer) {
+        return result;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+    }
+  };
+
   const handleSubmit = async ({ message, role }) => {
     const requestRole = activeChat?.assistantRole ?? role;
 
@@ -62,22 +80,27 @@ export function ChatWindow() {
     addMessage(userMessage, role);
     setIsThinking(true);
 
-    const response = await sendMessage.mutateAsync({
+    const startResponse = await sendMessage.mutateAsync({
+      chatId: activeChatId,
       role: requestRole,
       message,
+      teamId: selectedTeamId === "all" ? null : selectedTeamId,
     });
+
+    const finalResponse = await waitForAiAnswer(startResponse.sessionId);
 
     setIsThinking(false);
 
-    const assistantMessageId = response.id ?? crypto.randomUUID();
+    const assistantMessageId = crypto.randomUUID();
 
     addMessage({
       id: assistantMessageId,
-      role: response.role ?? "assistant",
+      role: "assistant",
       content: "",
+      isDigest: finalResponse.isDigest,
     });
 
-    await animateAssistantMessage(assistantMessageId, response.content);
+    await animateAssistantMessage(assistantMessageId, finalResponse.answer);
   };
 
   return (
