@@ -30,10 +30,10 @@ export function AuthProvider() {
       <div className="flex min-h-[60vh] w-full items-center justify-center">
         <div className="rounded-lg border border-[#D9D9D9] bg-white p-6 text-center shadow-md">
           <p className="text-[18px] font-semibold">
-            Не удалось получить пользователя
+            Не удалось загрузить данные пользователя
           </p>
           <p className="mt-2 text-[#666]">
-            Сервер авторизации сейчас недоступен.
+            Выполните вход в систему повторно.
           </p>
 
           <button
