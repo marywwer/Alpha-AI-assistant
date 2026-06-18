@@ -15,6 +15,7 @@ import {
   useStatusDistribution,
 } from "../features/analytics/useAnalytics.js";
 import { teams } from "../data/mockData.js";
+import { cn } from "../shared/lib/utils.js";
 
 const teamMetricGroups = [
   {
@@ -95,27 +96,29 @@ export function SummaryPage() {
     <div>
       <h1 className="mb-6 text-[24px] font-semibold">{pageTitle}</h1>
 
-      <section
-        className={
-          isAllTeams
-            ? "flex flex-wrap items-start gap-10 lg:justify-between"
-            : "grid items-start gap-6 lg:grid-cols-3"
-        }
-      >
-        {currentMetricGroups.map((group) => {
+      <section className="flex items-start justify-between gap-6">
+        {currentMetricGroups.map((group, index) => {
           const groupMetrics = metrics.filter((metric) =>
             group.ids.includes(metric.id),
           );
 
-          const isCommitsGroup = group.title === "Коммиты и страницы";
+          const groupsCount = currentMetricGroups.length;
+
+          const alignClass =
+            groupsCount === 3
+              ? index === 0
+                ? "justify-self-start"
+                : index === 1
+                  ? "justify-self-center"
+                  : "justify-self-end"
+              : groupsCount === 2
+                ? index === 0
+                  ? "justify-self-start"
+                  : "justify-self-end"
+                : "";
 
           return (
-            <div
-              key={group.title}
-              className={
-                !isAllTeams && isCommitsGroup ? "justify-self-end" : ""
-              }
-            >
+            <div key={group.title} className={alignClass}>
               <KpiGroup title={group.title}>
                 {groupMetrics.map((metric) => (
                   <KpiCard key={metric.id} metric={metric} />

@@ -4,7 +4,7 @@ export function KpiGroup({ title, children }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <section className="w-[325px] rounded-[8px] border border-[#D1D1D1] bg-white shadow-[0_2px_4px_rgba(0,0,0,0.25)]">
+    <section className="w-[300px] rounded-[8px] border border-[#D1D1D1] bg-white shadow-[0_2px_4px_rgba(0,0,0,0.25)]">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}

@@ -565,6 +565,8 @@ export function RoadmapBoard({ data }) {
     });
   };
 
+  const isEmptyRoadmap = data.lanes.length === 0;
+
   return (
     <div
       className="grid overflow-hidden bg-[#FAFAFA] rounded-[3px]"
@@ -572,10 +574,13 @@ export function RoadmapBoard({ data }) {
         width: BOARD_WIDTH,
         maxWidth: "100%",
         height: BOARD_HEIGHT,
-        gridTemplateColumns: `${SIDEBAR_WIDTH}px 1fr`,
+        gridTemplateColumns: isEmptyRoadmap
+        ? "1fr"
+        : `${SIDEBAR_WIDTH}px 1fr`,
       }}
     >
       {/* левая колонка НЕ скроллится горизонтально */}
+      {!isEmptyRoadmap && (
       <div className="relative z-40 bg-[#FAFAFA]">
         {data.lanes.length === 0
           ? null
@@ -617,6 +622,7 @@ export function RoadmapBoard({ data }) {
               );
             })}
       </div>
+      )}
 
       {/* правая часть — календарь + задачи */}
       <div className="relative overflow-hidden bg-[#FAFAFA]">
