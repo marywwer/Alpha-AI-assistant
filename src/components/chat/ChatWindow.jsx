@@ -20,8 +20,15 @@ export function ChatWindow() {
   const getMessageResult = useMessageResult();
   const { selectedTeamId } = useAppStore();
 
-  const { chats, activeChatId, initChats, addMessage, updateMessage } =
-    useChatStore();
+  const {
+    chats,
+    activeChatId,
+    initChats,
+    addMessageToChat,
+    createTempChat,
+    updateChatMeta,
+    updateMessage,
+  } = useChatStore();
 
   useEffect(() => {
     initChats();
@@ -52,13 +59,13 @@ export function ChatWindow() {
     scrollToBottom();
   }, [messages, isThinking]);
 
-  const animateAssistantMessage = async (messageId, fullText) => {
+  const animateAssistantMessage = async (chatId, messageId, fullText) => {
     const words = splitByWords(fullText);
     let currentText = "";
 
     for (const word of words) {
       currentText += word;
-      updateMessage(messageId, currentText);
+      updateMessage(chatId, messageId, currentText);
 
       await new Promise((resolve) => setTimeout(resolve, 35));
     }
@@ -87,43 +94,55 @@ export function ChatWindow() {
       content: message,
     };
 
-    addMessage(userMessage, requestRole);
+    let targetChatId = activeChatId;
+
+    if (!targetChatId) {
+      targetChatId = createTempChat({
+        message: userMessage,
+        assistantRole: requestRole,
+      });
+    } else {
+      addMessageToChat(targetChatId, userMessage);
+    }
+
     setIsThinking(true);
 
     try {
       const startResponse = await sendMessage.mutateAsync({
-        chatId: null,
+        chatId: activeChat?.backendChatId ?? null,
         role: requestRole,
         message,
         teamId: selectedTeamId === "all" ? null : selectedTeamId,
       });
 
-      console.log("START RESPONSE:", startResponse);
-
-      console.log("BEFORE WAIT");
       const finalResponse = await waitForAiAnswer(startResponse.sessionId);
-      console.log("FINAL RESPONSE:", finalResponse);
-
+      
       setIsThinking(false);
+
+      updateChatMeta(targetChatId, {
+        backendChatId: finalResponse.chatId,
+        title: finalResponse.title || "Новый чат",
+      });
 
       const assistantMessageId = crypto.randomUUID();
 
-      addMessage({
+      addMessageToChat(targetChatId, {
         id: assistantMessageId,
         role: "assistant",
         content: "",
         isDigest: finalResponse.isDigest,
       });
 
-      await animateAssistantMessage(assistantMessageId, finalResponse.answer);
+      await animateAssistantMessage(
+        targetChatId,
+        assistantMessageId,
+        finalResponse.answer,
+      );
     } catch (error) {
-      console.error("CHAT ERROR:", error);
-
-      addMessage({
+      addMessageToChat(targetChatId, {
         id: crypto.randomUUID(),
         role: "assistant",
-        content:
-          "Ошибка: сервер не принял сообщение. Проверь Network → Response.",
+        content: "Ошибка: сервер не принял сообщение.",
       });
     } finally {
       setIsThinking(false);

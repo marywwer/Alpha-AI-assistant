@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import { useAppStore } from "../../store/appStore.js";
 import { useCurrentUser } from "./useAuth.js";
 
@@ -15,8 +16,11 @@ export function AuthProvider() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] w-full items-center justify-center">
-        Загрузка...
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Loader2
+          className="h-10 w-10 animate-spin"
+          style={{ color: "#FF0404" }}
+        />
       </div>
     );
   }

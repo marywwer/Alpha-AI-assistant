@@ -726,7 +726,6 @@ export function RoadmapBoard({ data }) {
 
             {data.lanes.length === 0 ? (
               <div className="absolute top-32 left-0 right-0 text-center text-sm text-slate-400">
-                Для режима "Все команды" roadmap пустой
               </div>
             ) : (
               data.lanes.map((lane, laneIndex) => {

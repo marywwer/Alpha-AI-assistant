@@ -1,72 +1,64 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const createChat = () => ({
-  id: crypto.randomUUID(),
-  backendChatId: null, 
-  title: "Новый чат",
-  messages: [],
-  assistantRole: null,
-  createdAt: new Date().toISOString(),
-});
-
 export const useChatStore = create(
   persist(
-    (set, get) => ({
-      chats: [createChat()],
+    (set) => ({
+      chats: [],
       activeChatId: null,
 
-      initChats: () => {
-        const { chats, activeChatId } = get();
+      initChats: () => {},
 
-        if (!activeChatId && chats.length > 0) {
-          set({ activeChatId: chats[0].id });
-        }
-      },
-
-      createNewChat: () => {
-        const chat = createChat();
-
-        set((state) => ({
-          chats: [chat, ...state.chats],
-          activeChatId: chat.id,
-        }));
+      startNewChat: () => {
+        set({ activeChatId: null });
       },
 
       selectChat: (chatId) => {
         set({ activeChatId: chatId });
       },
 
-      addMessage: (message, assistantRole = null) => {
+      createTempChat: ({ message, assistantRole }) => {
+        const tempId = crypto.randomUUID();
+
+        const chat = {
+          id: tempId,
+          backendChatId: null,
+          title: "Новый чат",
+          messages: [message],
+          assistantRole,
+          createdAt: new Date().toISOString(),
+        };
+
         set((state) => ({
-          chats: state.chats.map((chat) => {
-            if (chat.id !== state.activeChatId) return chat;
+          chats: [chat, ...state.chats],
+          activeChatId: tempId,
+        }));
 
-            const isFirstUserMessage =
-              chat.messages.length === 0 && message.role === "user";
+        return tempId;
+      },
 
-            return {
-              ...chat,
-
-              title: isFirstUserMessage
-                ? message.content.slice(0, 35)
-                : chat.title,
-
-              assistantRole:
-                isFirstUserMessage && assistantRole
-                  ? assistantRole
-                  : chat.assistantRole,
-
-              messages: [...chat.messages, message],
-            };
-          }),
+      addMessageToChat: (chatId, message) => {
+        set((state) => ({
+          chats: state.chats.map((chat) =>
+            chat.id === chatId
+              ? { ...chat, messages: [...chat.messages, message] }
+              : chat,
+          ),
         }));
       },
 
-      updateMessage: (messageId, content) => {
+      updateChatMeta: (chatId, updates) => {
+        set((state) => ({
+          chats: state.chats.map((chat) =>
+            chat.id === chatId ? { ...chat, ...updates } : chat,
+          ),
+        }));
+      },
+
+      updateMessage: (chatId, messageId, content) => {
         set((state) => ({
           chats: state.chats.map((chat) => {
-            if (chat.id !== state.activeChatId) return chat;
+            if (chat.id !== chatId) return chat;
 
             return {
               ...chat,

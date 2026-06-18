@@ -21,7 +21,7 @@ export function Sidebar({ variant = "chat", items = [] }) {
   const initials = `${firstName[0] || ""}${lastName[0] || ""}`;
 
   const { isSidebarCollapsed, toggleSidebar } = useAppStore();
-  const { chats, activeChatId, createNewChat, selectChat } = useChatStore();
+  const { chats, activeChatId, startNewChat, selectChat } = useChatStore();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -113,7 +113,7 @@ export function Sidebar({ variant = "chat", items = [] }) {
         <>
           {variant !== "meetings" && (
             <Button
-              onClick={createNewChat}
+              onClick={startNewChat}
               className={cn(
                 "mb-[27px]",
                 menuItemClass,

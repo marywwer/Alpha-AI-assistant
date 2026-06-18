@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
-import { ArrowLeft, AtSign, Save, Zap } from "lucide-react";
+import { ArrowLeft, AtSign, Save, Zap, Loader2 } from "lucide-react";
 import { isValidUuid } from "../shared/lib/utils.js";
 
 import {
@@ -28,7 +28,14 @@ export function ProtocolEditorPage() {
   } = useProtocol(protocolId);
 
   if (isMeetingLoading || isProtocolLoading) {
-    return <div>Загрузка...</div>;
+    return (
+      <div className="flex h-1/2 items-center justify-center">
+        <Loader2
+          className="h-10 w-10 animate-spin"
+          style={{ color: "#FF0404" }}
+        />
+      </div>
+    );
   }
 
   if (!isNewProtocol && isProtocolError) {

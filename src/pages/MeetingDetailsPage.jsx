@@ -1,6 +1,14 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Calendar, FileText, Link2, Search, Clock, Users } from "lucide-react";
+import {
+  Calendar,
+  FileText,
+  Link2,
+  Search,
+  Clock,
+  Users,
+  Loader2,
+} from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { isValidUuid } from "../shared/lib/utils.js";
@@ -116,7 +124,14 @@ export function MeetingDetailsPage() {
   };
 
   if (isLoading || isAttachLoading) {
-    return <div>Загрузка...</div>;
+    return (
+      <div className="flex h-1/2 items-center justify-center">
+        <Loader2
+          className="h-10 w-10 animate-spin"
+          style={{ color: "#FF0404" }}
+        />
+      </div>
+    );
   }
 
   return (
