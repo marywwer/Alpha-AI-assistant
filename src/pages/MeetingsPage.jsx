@@ -36,8 +36,8 @@ export function MeetingsPage() {
       const meetingDate = format(new Date(meeting.startedAt), "yyyy-MM-dd");
 
       const matchesDate = meetingDate === selectedDateKey;
-      const matchesSearch = meeting.description
-        ?.toLowerCase()
+      const matchesSearch = (meeting.title ?? "")
+        .toLowerCase()
         .includes(search.toLowerCase());
 
       return matchesDate && matchesSearch;

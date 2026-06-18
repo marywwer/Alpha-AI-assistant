@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 const createChat = () => ({
   id: crypto.randomUUID(),
+  backendChatId: null, 
   title: "Новый чат",
   messages: [],
   assistantRole: null,

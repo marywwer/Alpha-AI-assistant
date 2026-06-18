@@ -3,7 +3,7 @@ import { api } from "../../shared/api/mockApi.js";
 import { metricsApi } from "../../shared/api/metricsApi.js";
 import { digestApi } from "../../shared/api/digestApi.js";
 
-export const useKpi = (teamId, metricsKeys = []) =>
+/*export const useKpi = (teamId, metricsKeys = []) =>
   useQuery({
     queryKey: ["kpi", teamId, metricsKeys],
     queryFn: async () => {
@@ -25,6 +25,13 @@ export const useKpi = (teamId, metricsKeys = []) =>
       };
     },
     enabled: metricsKeys.length > 0,
+    refetchInterval: 60_000,
+  });*/
+
+export const useKpi = (teamId) =>
+  useQuery({
+    queryKey: ["kpi", teamId],
+    queryFn: () => api.getKpi(teamId),
     refetchInterval: 60_000,
   });
 
@@ -52,11 +59,17 @@ export const useMemberLoad = (teamId) =>
     queryFn: () => api.getMemberLoad(teamId),
   });
 
-export const useRoadmap = (teamId) =>
+/*export const useRoadmap = (teamId) =>
   useQuery({
     queryKey: ["roadmap", teamId],
     queryFn: () => digestApi.getDigestData(teamId),
     refetchInterval: 60_000,
+  });*/
+
+export const useRoadmap = (teamId) =>
+  useQuery({
+    queryKey: ["roadmap", teamId],
+    queryFn: () => api.getRoadmap(teamId),
   });
 
 export function usePriorityDoneTasks(teamId) {

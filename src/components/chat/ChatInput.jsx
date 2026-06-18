@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react"; // Добавьте useEffect
+import { useRef, useState, useEffect } from "react";
 import { Button } from "../ui/Button.jsx";
 import sendButton from "../../../public/img/arrow-up-circle.svg";
 
@@ -19,23 +19,20 @@ export function ChatInput({
   const [message, setMessage] = useState("");
   const textareaRef = useRef(null);
 
-  // Функция для изменения высоты textarea
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
     if (!textarea) return;
     
-    // Сбрасываем высоту, чтобы правильно вычислить scrollHeight
     textarea.style.height = "auto";
-    // Устанавливаем новую высоту
     textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
-    adjustTextareaHeight(); // Вызываем изменение высоты
+    adjustTextareaHeight();
   };
 
-  // Эффект для сброса высоты при очистке сообщения
+
   useEffect(() => {
     if (!message) {
       const textarea = textareaRef.current;
@@ -54,7 +51,6 @@ export function ChatInput({
 
     setMessage("");
 
-    // Сбрасываем высоту после очистки
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }

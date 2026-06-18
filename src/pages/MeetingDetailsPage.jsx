@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Calendar, FileText, Link2, Search, Clock, Users } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
+import { isValidUuid } from "../shared/lib/utils.js";
 
 import {
   useImportKonturMeeting,
@@ -20,6 +21,7 @@ const participantColors = [
 
 export function MeetingDetailsPage() {
   const { meetingId } = useParams();
+  const isValidMeetingId = isValidUuid(meetingId);
   const navigate = useNavigate();
 
   const { data: meeting, isLoading } = useMeeting(meetingId);
@@ -51,7 +53,7 @@ export function MeetingDetailsPage() {
   const openProtocolId = selectedProtocolId;
   const shouldDisableOpenProtocol = !openProtocolId;
 
-  const title = currentMeeting?.description || "Информация о встрече";
+  const title = selectedKonturMeeting?.title || getMeetingTitle(currentMeeting);
 
   const startedAt = currentMeeting?.startedAt
     ? new Date(currentMeeting.startedAt)
@@ -79,7 +81,9 @@ export function MeetingDetailsPage() {
 
   const filteredKonturMeetings = searchValue
     ? todayKonturMeetings.filter((item) =>
-        item.description?.toLowerCase().includes(searchValue),
+        [item.title, item.description]
+          .filter(Boolean)
+          .some((value) => value.toLowerCase().includes(searchValue)),
       )
     : todayKonturMeetings;
 
@@ -87,14 +91,28 @@ export function MeetingDetailsPage() {
     searchValue.length > 0 && filteredKonturMeetings.length === 0;
 
   const handleAttachKontur = async () => {
-    if (!selectedKonturMeetingId) return;
+    if (!meetingId) {
+      console.error("meetingId is empty");
+      return;
+    }
+
+    if (!selectedKonturMeetingId || !selectedKonturMeeting) return;
 
     const response = await importKonturMeeting.mutateAsync({
-      konturMeetingId: selectedKonturMeetingId,
       meetingId,
+      konturMeetingId: selectedKonturMeetingId,
+
+      title: selectedKonturMeeting.title,
+      description: selectedKonturMeeting.description,
+      startedAt: selectedKonturMeeting.startedAt,
+      durationInMinutes: selectedKonturMeeting.durationInMinutes,
     });
 
-    navigate(`/meetings/${response.meetingId}`);
+    const nextMeetingId = response?.meetingId || meetingId;
+
+    navigate(`/meetings/${nextMeetingId}`, {
+      replace: true,
+    });
   };
 
   if (isLoading || isAttachLoading) {
@@ -173,7 +191,7 @@ export function MeetingDetailsPage() {
                             : "bg-white hover:bg-[#FCD9D9] hover:shadow-custom",
                         ].join(" ")}
                       >
-                        <p className="text-[18px]">{meeting.description}</p>
+                        <p className="text-[18px]">{meeting.title}</p>
 
                         <div className="mt-5 flex items-center gap-3.5">
                           <Badge
@@ -253,14 +271,16 @@ export function MeetingDetailsPage() {
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-[24px] font-semibold">Протоколы</h2>
 
-          <Link to={`/meetings/${meetingId}/protocol`}>
-            <button
-              type="button"
-              className="flex items-center gap-1 rounded-lg bg-[#FF0404] hover:bg-[#CA0808] active:bg-[#A50505] px-3 py-1 text-white"
-            >
-              + Добавить протокол
-            </button>
-          </Link>
+          {isValidMeetingId && (
+            <Link to={`/meetings/${meetingId}/protocol`}>
+              <button
+                type="button"
+                className="flex items-center gap-1 rounded-lg bg-[#FF0404] hover:bg-[#CA0808] active:bg-[#A50505] px-3 py-1 text-white"
+              >
+                + Добавить протокол
+              </button>
+            </Link>
+          )}
         </div>
 
         {protocols.length ? (
@@ -395,4 +415,16 @@ function formatDuration(minutes) {
   if (!restMinutes) return `${hours}ч`;
 
   return `${hours}ч ${restMinutes}мин`;
+}
+
+function getMeetingTitle(meeting) {
+  const title = meeting?.title?.trim();
+
+  if (!title) return "Информация о встрече";
+
+  if (title.startsWith("Неизвестная встреча")) {
+    return "Информация о встрече";
+  }
+
+  return title;
 }

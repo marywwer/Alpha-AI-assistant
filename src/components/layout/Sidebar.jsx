@@ -145,7 +145,8 @@ export function Sidebar({ variant = "chat", items = [] }) {
                 variant === "meetings" &&
                 location.pathname.startsWith(`/meetings/${item.id}`);
 
-              const itemTitle = variant === "meetings" ? item.name : item.title;
+              const itemTitle =
+                variant === "meetings" ? getMeetingTitle(item) : item.title;
 
               return (
                 <button
@@ -196,4 +197,16 @@ export function Sidebar({ variant = "chat", items = [] }) {
       </div>
     </aside>
   );
+}
+
+function getMeetingTitle(meeting) {
+  const title = meeting?.name?.trim() || meeting?.title?.trim();
+
+  if (!title) return "Информация о встрече";
+
+  if (title.startsWith("Неизвестная встреча")) {
+    return "Информация о встрече";
+  }
+
+  return title;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import {
   useSendMessage,
@@ -27,9 +27,17 @@ export function ChatWindow() {
     initChats();
   }, [initChats]);
 
-  const activeChat = chats.find((chat) => chat.id === activeChatId);
+  const activeChat = useMemo(
+    () => chats.find((chat) => chat.id === activeChatId),
+    [chats, activeChatId],
+  );
+
   const assistantRole = activeChat?.assistantRole ?? "analyst";
-  const messages = activeChat?.messages ?? [];
+
+  const messages = useMemo(
+    () => activeChat?.messages ?? [],
+    [activeChat?.messages],
+  );
 
   const scrollToBottom = () => {
     setTimeout(() => {
@@ -57,7 +65,7 @@ export function ChatWindow() {
   };
 
   const waitForAiAnswer = async (sessionId) => {
-    while (true) {
+    for (let attempt = 0; attempt < 20; attempt++) {
       const result = await getMessageResult.mutateAsync(sessionId);
 
       if (result?.answer) {
@@ -66,6 +74,8 @@ export function ChatWindow() {
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
     }
+
+    throw new Error("AI answer timeout");
   };
 
   const handleSubmit = async ({ message, role }) => {
@@ -77,30 +87,47 @@ export function ChatWindow() {
       content: message,
     };
 
-    addMessage(userMessage, role);
+    addMessage(userMessage, requestRole);
     setIsThinking(true);
 
-    const startResponse = await sendMessage.mutateAsync({
-      chatId: activeChatId,
-      role: requestRole,
-      message,
-      teamId: selectedTeamId === "all" ? null : selectedTeamId,
-    });
+    try {
+      const startResponse = await sendMessage.mutateAsync({
+        chatId: null,
+        role: requestRole,
+        message,
+        teamId: selectedTeamId === "all" ? null : selectedTeamId,
+      });
 
-    const finalResponse = await waitForAiAnswer(startResponse.sessionId);
+      console.log("START RESPONSE:", startResponse);
 
-    setIsThinking(false);
+      console.log("BEFORE WAIT");
+      const finalResponse = await waitForAiAnswer(startResponse.sessionId);
+      console.log("FINAL RESPONSE:", finalResponse);
 
-    const assistantMessageId = crypto.randomUUID();
+      setIsThinking(false);
 
-    addMessage({
-      id: assistantMessageId,
-      role: "assistant",
-      content: "",
-      isDigest: finalResponse.isDigest,
-    });
+      const assistantMessageId = crypto.randomUUID();
 
-    await animateAssistantMessage(assistantMessageId, finalResponse.answer);
+      addMessage({
+        id: assistantMessageId,
+        role: "assistant",
+        content: "",
+        isDigest: finalResponse.isDigest,
+      });
+
+      await animateAssistantMessage(assistantMessageId, finalResponse.answer);
+    } catch (error) {
+      console.error("CHAT ERROR:", error);
+
+      addMessage({
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content:
+          "Ошибка: сервер не принял сообщение. Проверь Network → Response.",
+      });
+    } finally {
+      setIsThinking(false);
+    }
   };
 
   return (
@@ -110,7 +137,7 @@ export function ChatWindow() {
           <ChatInput
             showRoles
             onSubmit={handleSubmit}
-            isPending={sendMessage.isPending}
+            isPending={sendMessage.isPending || isThinking}
             className="w-full"
           />
         </div>
@@ -148,7 +175,7 @@ export function ChatWindow() {
           <div className="sticky bottom-0 bg-[#FAFAFA] pb-4 pt-3">
             <ChatInput
               onSubmit={handleSubmit}
-              isPending={sendMessage.isPending}
+              isPending={sendMessage.isPending || isThinking}
               showRoles={false}
               className="w-full"
             />

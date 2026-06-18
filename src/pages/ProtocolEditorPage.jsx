@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
 import { ArrowLeft, AtSign, Save, Zap } from "lucide-react";
+import { isValidUuid } from "../shared/lib/utils.js";
 
 import {
   useCreateProtocol,
@@ -46,26 +48,47 @@ export function ProtocolEditorPage() {
 function ProtocolEditor({ meeting, protocol, isNewProtocol }) {
   const navigate = useNavigate();
   const { meetingId, protocolId } = useParams();
+  const isValidMeetingId = isValidUuid(meetingId);
 
   const createProtocol = useCreateProtocol(meetingId);
   const updateProtocol = useUpdateProtocol(meetingId);
   const formalizeProtocol = useFormalizeProtocol();
   const sendProtocolEmail = useSendProtocolEmail();
 
-  const [title, setTitle] = useState(
-    isNewProtocol ? "Новый протокол" : protocol?.name || "",
-  );
-
-  const [protocolText, setProtocolText] = useState(
-    isNewProtocol ? "" : protocol?.description || "",
-  );
+  const currentProtocol = Array.isArray(protocol) ? protocol[0] : protocol;
 
   const [isEditMode, setIsEditMode] = useState(isNewProtocol);
   const [isFormalizing, setIsFormalizing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
+  const [isDirtyAfterSave, setIsDirtyAfterSave] = useState(false);
 
-  const canSendEmail = Boolean(meeting?.isKonturAttached);
+  const [title, setTitle] = useState("Новый протокол");
+  const [protocolText, setProtocolText] = useState("");
+
+  useLayoutEffect(() => {
+    if (isNewProtocol) {
+      setTitle("Новый протокол");
+      setProtocolText("");
+      setIsEditMode(true);
+      setIsDirtyAfterSave(false);
+      return;
+    }
+
+    if (!currentProtocol) return;
+
+    if (isDirtyAfterSave) {
+      return;
+    }
+
+    setTitle(currentProtocol.name || "Протокол");
+    setProtocolText(currentProtocol.description || "");
+    setIsEditMode(false);
+  }, [isNewProtocol, currentProtocol, isDirtyAfterSave]);
+
+  const canSendEmail = Boolean(
+    currentProtocol?.isKonturAttached || meeting?.isKonturAttached,
+  );
 
   const saveStatusText = useMemo(() => {
     if (isSaving) return "Сохранение...";
@@ -78,23 +101,47 @@ function ProtocolEditor({ meeting, protocol, isNewProtocol }) {
   }, [isSaving, savedAt]);
 
   const handleFormalize = async () => {
+    if (!isEditMode) {
+      alert("Сначала нажмите «Изменить текст»");
+      return;
+    }
+
     if (!protocolText.trim()) return;
 
     setIsFormalizing(true);
 
     try {
+      const oneLineText = protocolText
+        .replace(/\s*\n+\s*/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
       const response = await formalizeProtocol.mutateAsync({
-        oldProtocolDesc: protocolText,
+        oldProtocolDesc: oneLineText,
       });
 
-      setProtocolText(response.newProtocolDesc || "");
-      setIsEditMode(false);
+      const newText = response?.newProtocolDesc || "";
+
+      if (!newText.trim()) {
+        alert("ИИ не вернул формализованный текст");
+        return;
+      }
+
+      setProtocolText(newText);
+
+      setIsEditMode(true);
     } finally {
       setIsFormalizing(false);
     }
   };
 
   const handleSave = async () => {
+    if (!isValidMeetingId) {
+      console.error("Некорректный meetingId:", meetingId);
+      alert("Нельзя создать протокол: некорректный id встречи");
+      return;
+    }
+
     if (!title.trim() || !protocolText.trim()) return;
 
     setIsSaving(true);
@@ -102,20 +149,25 @@ function ProtocolEditor({ meeting, protocol, isNewProtocol }) {
     try {
       if (isNewProtocol) {
         const response = await createProtocol.mutateAsync({
+          meetingId,
           name: title,
           description: protocolText,
         });
 
+        const newProtocolId = response?.protocolId || response?.id;
+
         setSavedAt(new Date());
 
-        if (response?.protocolId) {
-          navigate(`/meetings/${meetingId}/protocol/${response.protocolId}`, {
+        if (newProtocolId) {
+          navigate(`/meetings/${meetingId}/protocol/${newProtocolId}`, {
             replace: true,
           });
         }
 
         return;
       }
+
+      setIsDirtyAfterSave(true);
 
       await updateProtocol.mutateAsync({
         protocolId,
@@ -124,6 +176,7 @@ function ProtocolEditor({ meeting, protocol, isNewProtocol }) {
       });
 
       setSavedAt(new Date());
+      setIsEditMode(false);
     } finally {
       setIsSaving(false);
     }
@@ -152,9 +205,7 @@ function ProtocolEditor({ meeting, protocol, isNewProtocol }) {
 
         <div className="flex items-center gap-3">
           <span
-            className={[
-              isSaving ? "text-[#666]" : "text-[#67AF3D]",
-            ].join(" ")}
+            className={[isSaving ? "text-[#666]" : "text-[#67AF3D]"].join(" ")}
           >
             {saveStatusText}
           </span>
@@ -162,8 +213,13 @@ function ProtocolEditor({ meeting, protocol, isNewProtocol }) {
           <button
             type="button"
             onClick={handleFormalize}
-            disabled={isFormalizing || !protocolText.trim()}
-            className="inline-flex items-center gap-2 rounded-lg border border-[#C3C0C0] bg-white hover:bg-gray-50 px-4 py-1 disabled:opacity-50"
+            disabled={!isEditMode || isFormalizing || !protocolText.trim()}
+            className="inline-flex items-center gap-2 rounded-lg border border-[#C3C0C0] bg-white hover:bg-gray-50 px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+            title={
+              isEditMode
+                ? "Формализовать текущий текст протокола"
+                : "Сначала нажмите «Изменить текст»"
+            }
           >
             <Zap size={24} />
             {isFormalizing ? "Формализуем..." : "Формализовать"}
@@ -189,7 +245,7 @@ function ProtocolEditor({ meeting, protocol, isNewProtocol }) {
           <button
             type="button"
             onClick={handleSave}
-            disabled={isSaving}
+            disabled={isSaving || !isValidMeetingId}
             className="inline-flex items-center gap-2 rounded-lg border border-[#C3C0C0] bg-[#FF1616] hover:bg-[#CA0808] active:bg-[#A50505] px-4 py-1 text-white disabled:opacity-60"
           >
             <Save size={24} />
@@ -209,13 +265,36 @@ function ProtocolEditor({ meeting, protocol, isNewProtocol }) {
         {isEditMode ? (
           <textarea
             value={protocolText}
-            onChange={(event) => setProtocolText(event.target.value)}
+            onChange={(event) => {
+              setProtocolText(event.target.value);
+              setIsDirtyAfterSave(false);
+            }}
             className="min-h-[560px] w-full resize-none rounded-lg border border-[#CFCFCF] bg-[#F8F8F8] p-3 outline-none"
             placeholder="Начните писать протокол встречи..."
           />
         ) : (
           <div className="min-h-[560px] w-full rounded-lg border border-[#CFCFCF] bg-[#F8F8F8] p-4">
-            <ReactMarkdown>{protocolText}</ReactMarkdown>
+            <ReactMarkdown
+              remarkPlugins={[remarkBreaks]}
+              components={{
+                h3: ({ children }) => (
+                  <h3 className="mb-3 mt-4 text-[22px] font-semibold">
+                    {children}
+                  </h3>
+                ),
+                ul: ({ children }) => (
+                  <ul className="mb-4 list-disc space-y-1 pl-6">{children}</ul>
+                ),
+                li: ({ children }) => <li>{children}</li>,
+                p: ({ children }) => (
+                  <p className="mb-2 whitespace-pre-wrap break-words">
+                    {children}
+                  </p>
+                ),
+              }}
+            >
+              {protocolText}
+            </ReactMarkdown>
           </div>
         )}
 

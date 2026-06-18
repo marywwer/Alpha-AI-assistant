@@ -47,10 +47,11 @@ export const meetingApi = {
   getProtocol: (protocolId) =>
     request(`/meeting/protocol?protocolId=${encodeURIComponent(protocolId)}`),
 
-  createProtocol: ({ name, description }) =>
+  createProtocol: ({ meetingId, name, description }) =>
     request("/meeting/protocol", {
       method: "POST",
       body: JSON.stringify({
+        meetingId,
         name,
         description,
       }),
