@@ -119,14 +119,16 @@ export function ChatWindow() {
         teamId: selectedTeamId === "all" ? null : selectedTeamId,
       });
 
-      const realBackendChatId = startResponse.chatId;
+      updateChatMeta(targetChatId, {
+        backendChatId: startResponse.chatId,
+      });
 
       const finalResponse = await waitForAiAnswer(startResponse.sessionId);
 
       setIsThinking(false);
 
       updateChatMeta(targetChatId, {
-        backendChatId: realBackendChatId,
+        backendChatId: startResponse.chatId,
         title: finalResponse.title || "Новый чат",
       });
 
