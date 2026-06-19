@@ -108,19 +108,25 @@ export function ChatWindow() {
     setIsThinking(true);
 
     try {
+      const currentChat = useChatStore
+        .getState()
+        .chats.find((chat) => chat.id === targetChatId);
+
       const startResponse = await sendMessage.mutateAsync({
-        chatId: activeChat?.backendChatId ?? null,
+        chatId: currentChat?.backendChatId ?? null,
         role: requestRole,
         message,
         teamId: selectedTeamId === "all" ? null : selectedTeamId,
       });
 
+      const realBackendChatId = startResponse.chatId;
+
       const finalResponse = await waitForAiAnswer(startResponse.sessionId);
-      
+
       setIsThinking(false);
 
       updateChatMeta(targetChatId, {
-        backendChatId: finalResponse.chatId,
+        backendChatId: realBackendChatId,
         title: finalResponse.title || "Новый чат",
       });
 
