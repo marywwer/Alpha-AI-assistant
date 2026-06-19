@@ -1,37 +1,38 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { meetingApi as api } from "../../shared/api/meetingApi.js";
+import { meetingApi } from "../../shared/api/meetingApi.js";
 
 export const useMeetings = () =>
   useQuery({
     queryKey: ["meetings"],
-    queryFn: api.getMeetings,
+    queryFn: meetingApi.getMeetings,
   });
 
 export const useMeeting = (meetingId) =>
   useQuery({
     queryKey: ["meeting", meetingId],
-    queryFn: () => api.getMeeting(meetingId),
+    queryFn: () => meetingApi.getMeeting(meetingId),
     enabled: Boolean(meetingId),
   });
 
 export const useProtocol = (protocolId) =>
   useQuery({
     queryKey: ["protocol", protocolId],
-    queryFn: () => api.getProtocol(protocolId),
+    queryFn: () => meetingApi.getProtocol(protocolId),
     enabled: Boolean(protocolId),
   });
 
-export const useKonturMeetings = () =>
+export const useKonturMeetings = (start) =>
   useQuery({
-    queryKey: ["kontur-meetings"],
-    queryFn: api.getKonturMeetings,
+    queryKey: ["kontur-meetings", start],
+    queryFn: () => meetingApi.getKonturMeetings(start),
+    enabled: Boolean(start),
   });
 
 export const useCreateEmptyMeeting = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: api.createEmptyMeeting,
+    mutationFn: meetingApi.createEmptyMeeting,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["meetings"] });
     },
@@ -42,7 +43,7 @@ export const useImportKonturMeeting = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: api.importKonturMeeting,
+    mutationFn: meetingApi.importKonturMeeting,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["meetings"] });
 
@@ -59,7 +60,7 @@ export const useCreateProtocol = (meetingId) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: api.createProtocol,
+    mutationFn: meetingApi.createProtocol,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["meeting", meetingId] });
     },
@@ -70,7 +71,7 @@ export const useUpdateProtocol = (meetingId) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: api.updateProtocol,
+    mutationFn: meetingApi.updateProtocol,
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["meeting", meetingId] });
 
@@ -85,10 +86,10 @@ export const useUpdateProtocol = (meetingId) => {
 
 export const useFormalizeProtocol = () =>
   useMutation({
-    mutationFn: api.formalizeProtocol,
+    mutationFn: meetingApi.formalizeProtocol,
   });
 
 export const useSendProtocolEmail = () =>
   useMutation({
-    mutationFn: api.sendProtocolEmail,
+    mutationFn: meetingApi.sendProtocolEmail,
   });

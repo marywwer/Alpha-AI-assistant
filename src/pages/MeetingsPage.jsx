@@ -21,7 +21,6 @@ export function MeetingsPage() {
   const [selectedKonturMeetingId, setSelectedKonturMeetingId] = useState(null);
   const [search, setSearch] = useState("");
 
-  const { data: konturMeetings = [] } = useKonturMeetings();
   const createEmptyMeeting = useCreateEmptyMeeting();
   const importKonturMeeting = useImportKonturMeeting();
 
@@ -29,20 +28,14 @@ export function MeetingsPage() {
     ? format(selectedDate, "yyyy-MM-dd")
     : null;
 
+  const { data: konturMeetings = [], isFetching: isKonturMeetingsFetching } =
+    useKonturMeetings(selectedDateKey);
+
   const meetingsByDate = useMemo(() => {
-    if (!selectedDateKey) return [];
-
-    return konturMeetings.filter((meeting) => {
-      const meetingDate = format(new Date(meeting.startedAt), "yyyy-MM-dd");
-
-      const matchesDate = meetingDate === selectedDateKey;
-      const matchesSearch = (meeting.title ?? "")
-        .toLowerCase()
-        .includes(search.toLowerCase());
-
-      return matchesDate && matchesSearch;
-    });
-  }, [konturMeetings, selectedDateKey, search]);
+    return konturMeetings.filter((meeting) =>
+      (meeting.title ?? "").toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [konturMeetings, search]);
 
   const hasSelectedDate = Boolean(selectedDate);
   const hasMeetings = meetingsByDate.length > 0;
@@ -124,7 +117,9 @@ export function MeetingsPage() {
 
           {hasSelectedDate && (
             <div className="mt-4 space-y-3">
-              {hasMeetings ? (
+              {isKonturMeetingsFetching ? (
+                <p className="text-[18px] text-[#777]">Ищется...</p>
+              ) : hasMeetings ? (
                 meetingsByDate.map((meeting) => {
                   const isActive =
                     selectedKonturMeetingId === meeting.konturMeetingId;
@@ -147,7 +142,9 @@ export function MeetingsPage() {
                           : "bg-white hover:bg-[#FCD9D9] hover:shadow-custom",
                       ].join(" ")}
                     >
-                      <p className="text-[18px]">{meeting.description}</p>
+                      <p className="text-[18px]">
+                        {meeting.title ?? "Без названия"}
+                      </p>
 
                       <div className="mt-5 flex items-center gap-3.5">
                         <Badge

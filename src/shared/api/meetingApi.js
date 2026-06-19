@@ -27,7 +27,8 @@ export const meetingApi = {
       method: "POST",
     }),
 
-  getKonturMeetings: () => request("/meeting/import/kontur"),
+  getKonturMeetings: (start) =>
+    request(`/meeting/import/kontur?Start=${encodeURIComponent(start)}`),
 
   importKonturMeeting: ({ konturMeetingId, meetingId }) => {
     const body = {

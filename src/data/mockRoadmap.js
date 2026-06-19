@@ -69,7 +69,8 @@ export const roadmapMockByTeam = {
             completedAt: null,
             status: 1,
             priority: 1,
-            jiraLink: null,
+            jiraLink:
+              "https://agrigorev664-1776016399627.atlassian.net/browse/WAUQ-1?atlOrigin=eyJpIjoiMjMwMDU1OTcxOTg2NGVkMzg2YWE4ODBhNTk4OTM2ZTMiLCJwIjoiaiJ9",
             assignee: {
               id: "user-2",
               name: "Илья",
@@ -93,7 +94,7 @@ export const roadmapMockByTeam = {
             completedAt: "2026-06-14",
             status: 2,
             priority: 2,
-            jiraLink: null,
+            jiraLink: "https://jira.example.com/task-5",
             assignee: {
               id: "user-3",
               name: "Мария",
@@ -171,7 +172,7 @@ export const roadmapMockByTeam = {
             completedAt: "2026-05-23",
             status: 2,
             priority: 1,
-            jiraLink: null,
+            jiraLink: "https://jira.example.com/task-5",
             assignee: {
               id: "alpha-user-1",
               name: "Анна",
@@ -210,7 +211,7 @@ export const roadmapMockByTeam = {
             completedAt: null,
             status: 1,
             priority: 1,
-            jiraLink: null,
+            jiraLink: "https://jira.example.com/task-5",
             assignee: {
               id: "alpha-user-2",
               name: "Дмитрий",
@@ -256,7 +257,7 @@ export const roadmapMockByTeam = {
             completedAt: null,
             status: 1,
             priority: 3,
-            jiraLink: null,
+            jiraLink: "https://jira.example.com/task-5",
             assignee: {
               id: "alpha-user-4",
               name: "Сергей",
@@ -325,7 +326,7 @@ export const roadmapMockByTeam = {
             completedAt: null,
             status: 1,
             priority: 2,
-            jiraLink: null,
+            jiraLink: "https://jira.example.com/task-5",
             assignee: {
               id: "team-1-user-2",
               name: "Павел",
@@ -371,7 +372,7 @@ export const roadmapMockByTeam = {
             completedAt: null,
             status: 1,
             priority: 3,
-            jiraLink: null,
+            jiraLink: "https://jira.example.com/task-5",
             assignee: {
               id: "team-1-user-4",
               name: "Алина",
